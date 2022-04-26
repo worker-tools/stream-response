@@ -1,5 +1,4 @@
 import { asyncIterableToStream } from 'https://ghuc.cc/qwtel/whatwg-stream-to-async-iter/index.ts';
-// import { concatUint8Arrays } from 'https://ghuc.cc/qwtel/typed-array-utils'
 import { aMap, aJoin, promiseToAsyncIterable, ForOfAwaitable } from './iter.ts';
 
 // deno-lint-ignore no-explicit-any
