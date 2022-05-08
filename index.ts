@@ -25,17 +25,20 @@ const stringStreamToByteStream: (body: StreamBodyInit) => ReadableStream<Uint8Ar
   }
   : body => maybeAsyncIterToStream(body).pipeThrough(new TextEncoderStream())
 
+const CONTENT_TYPE = 'content-type'
+const OCTET_STREAM = 'application/octet-stream'
+
 export class StreamResponse extends Response {
   constructor(body?: StreamBodyInit | null, init?: ResponseInit) {
     super(body && stringStreamToByteStream(body), init)
-    if (!this.headers.has('content-type')) this.headers.set('content-type', 'application/octet-stream')
+    if (!this.headers.has(CONTENT_TYPE)) this.headers.set(CONTENT_TYPE, OCTET_STREAM)
   }
 }
 
 export class ByteStreamResponse extends Response {
   constructor(body?: ByteStreamBodyInit | null, init?: ResponseInit) {
     super(body && maybeAsyncIterToStream(body), init)
-    if (!this.headers.has('content-type')) this.headers.set('content-type', 'application/octet-stream')
+    if (!this.headers.has(CONTENT_TYPE)) this.headers.set(CONTENT_TYPE, OCTET_STREAM)
   }
 }
 
@@ -49,7 +52,7 @@ export class BufferedStreamResponse extends Response {
     super(body && asyncIterToStream(promiseToAsyncIter(
       aJoin(maybeStreamToAsyncIter(body)).then(str => new TextEncoder().encode(str)))
     ), init);
-    if (!this.headers.has('content-type')) this.headers.set('content-type', 'application/octet-stream')
+    if (!this.headers.has(CONTENT_TYPE)) this.headers.set(CONTENT_TYPE, OCTET_STREAM)
   }
 }
 
@@ -58,7 +61,7 @@ export class BufferedByteStreamResponse extends Response {
     super(body && asyncIterToStream(promiseToAsyncIter(
       collect(maybeStreamToAsyncIter(body)).then(chunks => concatUint8Arrays(...chunks))
     )), init);
-    if (!this.headers.has('content-type')) this.headers.set('content-type', 'application/octet-stream')
+    if (!this.headers.has(CONTENT_TYPE)) this.headers.set(CONTENT_TYPE, OCTET_STREAM)
   }
 }
 
@@ -74,7 +77,7 @@ export class StreamRequest extends Request {
       ...body ? { body: stringStreamToByteStream(body) } : {},
       ...rest,
     });
-    if (body && !this.headers.has('content-type')) this.headers.set('content-type', 'application/octet-stream')
+    if (body && !this.headers.has(CONTENT_TYPE)) this.headers.set(CONTENT_TYPE, OCTET_STREAM)
   }
 }
 
@@ -85,7 +88,7 @@ export class ByteStreamRequest extends Request {
       ...body ? { body: maybeAsyncIterToStream(body) } : {},
       ...rest,
     });
-    if (body && !this.headers.has('content-type')) this.headers.set('content-type', 'application/octet-stream')
+    if (body && !this.headers.has(CONTENT_TYPE)) this.headers.set(CONTENT_TYPE, OCTET_STREAM)
   }
 }
 
