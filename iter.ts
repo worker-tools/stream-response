@@ -1,5 +1,6 @@
 export type Awaitable<T> = T | Promise<T>;
-export type ForOfAwaitable<T> = Iterable<T> | AsyncIterable<T>;
+export type ForAwaitable<T> = Iterable<T> | AsyncIterable<T>;
+export type { ForAwaitable as ForOfAwaitable }
 
 export const isIterable = <T>(x: unknown): x is Iterable<T> => 
   x != null && typeof x === 'object' && Symbol.iterator in x
@@ -7,7 +8,7 @@ export const isIterable = <T>(x: unknown): x is Iterable<T> =>
 export const isAsyncIterable = <T>(x: unknown): x is AsyncIterable<T> => 
   x != null && typeof x === 'object' && Symbol.asyncIterator in x
 
-export const isForOfAwaitable = <T>(x: unknown): x is ForOfAwaitable<T> => 
+export const isForAwaitable = <T>(x: unknown): x is ForAwaitable<T> => 
   x != null && typeof x === 'object' && (Symbol.asyncIterator in x || Symbol.iterator in x)
 
 /**
@@ -46,7 +47,7 @@ export function* map<A, B>(iterable: Iterable<A>, f: (a: A) => B): IterableItera
   for (const x of iterable) yield f(x);
 }
 
-export async function* aMap<A, B>(iterable: ForOfAwaitable<A>, f: (a: A) => Awaitable<B>): AsyncIterableIterator<B> {
+export async function* aMap<A, B>(iterable: ForAwaitable<A>, f: (a: A) => Awaitable<B>): AsyncIterableIterator<B> {
   for await (const x of iterable) yield f(x);
 }
 
@@ -54,18 +55,18 @@ export function join(iterable: Iterable<string>): string {
   return [...iterable].join('');
 }
 
-export async function aJoin(iterable: ForOfAwaitable<string>): Promise<string> {
+export async function aJoin(iterable: ForAwaitable<string>): Promise<string> {
   const chunks = [];
   for await (const x of iterable) chunks.push(x);
   return chunks.join('');
 }
 
-export async function aConsume<T>(iterable: ForOfAwaitable<T>): Promise<T[]> {
+export async function collect<T>(iterable: ForAwaitable<T>): Promise<T[]> {
   const chunks = [];
   for await (const x of iterable) chunks.push(x);
   return chunks
 }
 
-export async function* promiseToAsyncIterable<T>(promise: Promise<T>): AsyncIterableIterator<T> {
+export async function* promiseToAsyncIter<T>(promise: Promise<T>): AsyncIterableIterator<T> {
   yield await promise;
 }
