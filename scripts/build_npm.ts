@@ -45,7 +45,11 @@ await build({
   mappings: {
     "https://ghuc.cc/qwtel/whatwg-stream-to-async-iter/index.ts": {
       name: "whatwg-stream-to-async-iter",
-      version: "^0.5.0",
+      version: "latest",
+    },
+    "https://ghuc.cc/qwtel/typed-array-utils/index.ts": {
+      name: "typed-array-utils",
+      version: "latest",
     },
   },
 });
