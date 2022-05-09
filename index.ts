@@ -65,7 +65,7 @@ export class BufferedByteStreamResponse extends Response {
   }
 }
 
-export type { BufferedStreamResponse as BufferedResponse }
+export { BufferedStreamResponse as BufferedResponse }
 
 export type StreamRequestInit = Omit<RequestInit, 'body'> & { body?: StreamBodyInit }
 export type ByteStreamRequestInit = Omit<RequestInit, 'body'> & { body?: ByteStreamBodyInit }
