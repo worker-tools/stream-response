@@ -70,3 +70,16 @@ export async function collect<T>(iterable: ForAwaitable<T>): Promise<T[]> {
 export async function* promiseToAsyncIter<T>(promise: Promise<T>): AsyncIterableIterator<T> {
   yield await promise;
 }
+
+export function promiseToStream<T>(promise: Promise<T>): ReadableStream<T> {
+  return new ReadableStream({
+    async start(ctrl) { 
+      try { 
+        ctrl.enqueue(await promise); 
+        ctrl.close()
+      } catch (err) { 
+        ctrl.error(err) 
+      } 
+    }
+  })
+}

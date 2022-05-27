@@ -1,7 +1,7 @@
 // deno-lint-ignore-file no-explicit-any
 import { asyncIterToStream, streamToAsyncIter } from 'https://ghuc.cc/qwtel/whatwg-stream-to-async-iter/index.ts';
 import { concatUint8Arrays } from 'https://ghuc.cc/qwtel/typed-array-utils/index.ts'
-import { aMap, aJoin, collect, promiseToAsyncIter, ForAwaitable } from './iter.ts';
+import { aMap, aJoin, collect, promiseToStream, ForAwaitable } from './iter.ts';
 
 export type StreamBodyInit = ForAwaitable<string> | ReadableStream<string>;
 export type ByteStreamBodyInit = ForAwaitable<Uint8Array> | ReadableStream<Uint8Array>;
@@ -49,8 +49,8 @@ export class ByteStreamResponse extends Response {
  */
 export class BufferedStreamResponse extends Response {
   constructor(body?: StreamBodyInit | null, init?: ResponseInit) {
-    super(body && asyncIterToStream(promiseToAsyncIter(
-      aJoin(maybeStreamToAsyncIter(body)).then(str => new TextEncoder().encode(str)))
+    super(body && promiseToStream(
+      aJoin(maybeStreamToAsyncIter(body)).then(str => new TextEncoder().encode(str))
     ), init);
     if (!this.headers.has(CONTENT_TYPE)) this.headers.set(CONTENT_TYPE, OCTET_STREAM)
   }
@@ -58,9 +58,9 @@ export class BufferedStreamResponse extends Response {
 
 export class BufferedByteStreamResponse extends Response {
   constructor(body?: ByteStreamBodyInit | null, init?: ResponseInit) {
-    super(body && asyncIterToStream(promiseToAsyncIter(
+    super(body && promiseToStream(
       collect(maybeStreamToAsyncIter(body)).then(chunks => concatUint8Arrays(...chunks))
-    )), init);
+    ), init);
     if (!this.headers.has(CONTENT_TYPE)) this.headers.set(CONTENT_TYPE, OCTET_STREAM)
   }
 }
