@@ -33,7 +33,11 @@ router.get('/sse', contentType(['text/event-stream']), (req, { type }) => {
 
 *[SSE]: Server Sent Events
 
+<br/>
+
 --------
+
+<br/>
 
 <p align="center"><a href="https://workers.tools"><img src="https://workers.tools/assets/img/logo.svg" width="100" height="100" /></a>
 <p align="center">This module is part of the Worker Tools collection<br/>⁕

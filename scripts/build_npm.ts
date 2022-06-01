@@ -30,7 +30,7 @@ await build({
     },
     "https://ghuc.cc/qwtel/typed-array-utils/index.ts": {
       name: "typed-array-utils",
-      version: "latest",
+      version: "^0.2.4",
     },
   },
 });
